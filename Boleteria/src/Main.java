@@ -1,5 +1,10 @@
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfWriter;
+
 import javax.swing.*;
 import javax.swing.text.Document;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.HashSet;
@@ -66,7 +71,7 @@ public class Main {
 
     private static void establecerRango(){
         limiteInferior = Integer.parseInt((JOptionPane.showInputDialog("Por favor escoja el número menor")));
-        limiteInferior = Integer.parseInt((JOptionPane.showInputDialog("Por favor escoja el número mayor")));
+        limiteSuperior = Integer.parseInt((JOptionPane.showInputDialog("Por favor escoja el número mayor")));
     }
 
     /**
@@ -120,26 +125,41 @@ public class Main {
         JOptionPane.showMessageDialog(null, listado.toString());
     }
 
-    /*private static void impresionIMG() {
-
-        // Crear el documento
-        Document documento = new Document();
-
+    private static void impresionIMG() {
         try {
-            PdfWriter.getInstance(documento, new FileOutputStream("Prueba_Boleto.pdf")); // Corregir el nombre del archivo PDF
+            // Nombre del archivo PDF
+            String nombreArchivo = "ListadoNumerosGeneradosConImagen.pdf";
 
+            // Crear el documento PDF
+            com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
+
+            // Crear el objeto PdfWriter para escribir en el archivo PDF
+            PdfWriter.getInstance(documento, new FileOutputStream(new File(nombreArchivo)));
+
+            // Abrir el documento para agregar contenido
             documento.open();
 
+            // Agregar la imagen al documento
+            Image imagen = Image.getInstance("ruta/a/la/imagen.jpg"); // Reemplaza con la ruta de tu imagen
+            Rectangle pageSize = new Rectangle(imagen.getWidth(), imagen.getHeight());
+            documento.setPageSize(pageSize);
+            documento.newPage();
+            documento.add(imagen);
+
+            // Agregar el contenido al documento (números generados)
             for (int numero : numerosGenerados) {
-                documento.add(new Paragraph(String.valueOf(numero)));
+                documento.add(new com.itextpdf.text.Paragraph(String.valueOf(numero)));
             }
 
+            // Cerrar el documento
             documento.close();
 
-        } catch (DocumentException | FileNotFoundException errorPDF) {
-            System.out.println("oooops!, se presentó un error \n" + errorPDF);
+            // Notificar que se ha generado el PDF
+            JOptionPane.showMessageDialog(null, "El listado de números generados con imagen se ha impreso en el archivo: " + nombreArchivo);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al imprimir el listado en PDF: " + e.getMessage());
         }
-    }*/
+    }
 
 
 
